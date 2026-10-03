@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой идеальный день</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ЭКРАН ВХОДА / РЕГИСТРАЦИИ -->
+<div id="authScreen" class="auth-screen">
+    <div class="auth-box">
+        <h1>Мой идеальный день</h1>
+        <p class="auth-sub">Войди или создай аккаунт</p>
+
+        <input type="email" id="authEmail" placeholder="Email">
+        <input type="password" id="authPassword" placeholder="Пароль (минимум 6 символов)">
+
+        <button type="button" id="loginBtn" class="btn-primary">Войти</button>
+        <button type="button" id="registerBtn" class="btn-secondary">Зарегистрироваться</button>
+
+        <p class="auth-error" id="authError"></p>
+    </div>
+</div>
+
+<div class="app" style="display:none;">
+
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-title">Мой идеальный день</div>
+            <div class="logo-sub">маленькие шаги — большие изменения</div>
+        </div>
+        <nav class="nav">
+            <button class="nav-btn active" data-page="home"><span class="nav-dot"></span> Главная</button>
+            <button class="nav-btn" data-page="habits"><span class="nav-dot"></span> Привычки</button>
+            <button class="nav-btn" data-page="health"><span class="nav-dot"></span> Здоровье</button>
+            <button class="nav-btn" data-page="calendar"><span class="nav-dot"></span> Календарь</button>
+            <button class="nav-btn" data-page="rituals"><span class="nav-dot"></span> Ритуалы</button>
+            <button class="nav-btn" data-page="goals"><span class="nav-dot"></span> Цели и заметки</button>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="date-box" id="sidebarDate"></div>
+            <button class="logout-btn" id="logoutBtn">Выйти из аккаунта</button>
+        </div>
+    </aside>
+
+    <main class="content">
+
+        <!-- ГЛАВНАЯ -->
+        <section id="page-home" class="page active">
+            <header class="page-header">
+                <h1>Привет, Венера</h1>
+                <p class="subtitle">Сегодня <span id="todayDate"></span></p>
+            </header>
+
+            <div class="hero-card">
+                <div class="hero-left">
+                    <div class="hero-label">Прогресс дня</div>
+                    <div class="hero-percent" id="todayPercentBig">0%</div>
+                    <div class="hero-note" id="todayNote">Начни с малого</div>
+                    <div class="hero-breakdown" id="todayBreakdown"></div>
+                </div>
+                <div class="hero-right">
+                    <canvas id="homeChart" width="140" height="140"></canvas>
+                </div>
+            </div>
+
+            <div class="grid-3">
+                <div class="mini-card">
+                    <div class="mini-label">Привычки</div>
+                    <div class="mini-value" id="homeHabitsCount">0 / 0</div>
+                </div>
+                <div class="mini-card">
+                    <div class="mini-label">Вода</div>
+                    <div class="mini-value" id="homeWaterCount">0 / 6</div>
+                </div>
+                <div class="mini-card">
+                    <div class="mini-label">Стрик</div>
+                    <div class="mini-value" id="homeStreak">0</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-head">
+                    <h2>Быстрые привычки</h2>
+                    <button class="link-btn" data-goto="habits">Все привычки</button>
+                </div>
+                <div id="homeHabitList" class="list"></div>
+            </div>
+        </section>
+
+        <!-- ПРИВЫЧКИ -->
+        <section id="page-habits" class="page">
+            <header class="page-header">
+                <h1>Привычки</h1>
+                <p class="subtitle">Отмечай каждый день</p>
+            </header>
+
+            <div class="section">
+                <div class="section-head">
+                    <h2>Сегодня</h2>
+                    <button class="btn-primary" id="openAddHabit">+ Добавить</button>
+                </div>
+                <div id="habitList" class="list"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-head"><h2>Результат за неделю</h2></div>
+                <div class="week-card">
+                    <div class="week-chart-wrap">
+                        <canvas id="weekChart" width="200" height="200"></canvas>
+                        <div class="week-chart-center" id="weekChartCenter">0%</div>
+                    </div>
+                    <div class="week-info">
+                        <div class="week-row"><span>Выполнено</span><span id="weekDone">0</span></div>
+                        <div class="week-row"><span>Всего</span><span id="weekTotal">0</span></div>
+                        <div class="week-row"><span>Лучший день</span><span id="weekBest">—</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЗДОРОВЬЕ -->
+        <section id="page-health" class="page">
+            <header class="page-header">
+                <h1>Здоровье</h1>
+                <p class="subtitle">Вода, движение и питание</p>
+            </header>
+
+            <div class="section">
+                <div class="section-head">
+                    <h2>Пить воду</h2>
+                    <span class="hint-small">Цель: <span id="waterGoal">6</span> стаканов</span>
+                </div>
+                <div class="water-counter">
+                    <div class="water-big"><span id="waterCount">0</span> / <span id="waterGoalTop">6</span></div>
+                    <div class="water-bar"><div class="water-fill" id="waterFill" style="width:0%"></div></div>
+                    <div class="water-actions">
+                        <button class="btn-secondary" id="waterMinus">−</button>
+                        <button class="btn-primary" id="waterPlus">+ Стакан</button>
+                    </div>
+                </div>
+                <div class="water-slots" id="waterSlots"></div>
+            </div>
+
+            <div class="section" style="margin-top:32px;">
+                <div class="section-head">
+                    <h2>Спорт на неделю</h2>
+                    <span class="hint-small" id="sportWeekCount">0 / 7</span>
+                </div>
+                <div class="sport-week" id="sportWeek"></div>
+
+                <div class="sport-grid">
+                    <div class="goal-card">
+                        <h2>Идеи тренировок</h2>
+                        <ul class="idea-list">
+                            <li>Йога</li>
+                            <li>Растяжка</li>
+                            <li>Пресс</li>
+                            <li>Кардио</li>
+                            <li>Прогулка</li>
+                            <li>Силовая</li>
+                        </ul>
+                    </div>
+                    <div class="goal-card">
+                        <h2>Моя цель</h2>
+                        <textarea id="sportGoal" placeholder="Например: 3 тренировки в неделю..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" style="margin-top:32px;">
+                <div class="section-head">
+                    <h2>Питание сегодня</h2>
+                    <span class="hint-small" id="foodCount">0 / 7</span>
+                </div>
+                <div class="food-list" id="foodList"></div>
+            </div>
+        </section>
+
+        <!-- КАЛЕНДАРЬ -->
+        <section id="page-calendar" class="page">
+            <header class="page-header">
+                <h1>Календарь</h1>
+                <p class="subtitle">Отмечай своё состояние</p>
+            </header>
+
+            <div class="calendar-card">
+                <div class="calendar-head">
+                    <button class="nav-arrow" id="prevMonth">‹</button>
+                    <div class="month-title" id="monthTitle">Месяц</div>
+                    <button class="nav-arrow" id="nextMonth">›</button>
+                </div>
+                <div class="weekdays">
+                    <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+                </div>
+                <div class="calendar-grid" id="calendarGrid"></div>
+                <div class="legend">
+                    <span class="legend-item"><span class="dot mood-5"></span>Отлично</span>
+                    <span class="legend-item"><span class="dot mood-4"></span>Хорошо</span>
+                    <span class="legend-item"><span class="dot mood-3"></span>Нормально</span>
+                    <span class="legend-item"><span class="dot mood-2"></span>Устал</span>
+                    <span class="legend-item"><span class="dot mood-1"></span>Плохо</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-head"><h2>Состояние за месяц</h2></div>
+                <div class="mood-stats" id="moodStats"></div>
+            </div>
+        </section>
+
+        <!-- РИТУАЛЫ -->
+        <section id="page-rituals" class="page">
+            <header class="page-header">
+                <h1>Ритуалы</h1>
+                <p class="subtitle">Утро и вечер</p>
+            </header>
+            <div class="rituals-grid">
+                <div class="ritual-card">
+                    <h2>Утренний ритуал</h2>
+                    <div class="ritual-list" id="morningList"></div>
+                </div>
+                <div class="ritual-card">
+                    <h2>Вечерний ритуал</h2>
+                    <div class="ritual-list" id="eveningList"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЦЕЛИ -->
+        <section id="page-goals" class="page">
+            <header class="page-header">
+                <h1>Цели и заметки</h1>
+                <p class="subtitle">Что важно сейчас</p>
+            </header>
+            <div class="goals-grid">
+                <div class="goal-card">
+                    <h2>Цели на месяц</h2>
+                    <div id="goalsList" class="goal-list"></div>
+                    <div class="goal-add">
+                        <input type="text" id="goalInput" placeholder="Новая цель">
+                        <button class="btn-primary" id="addGoal">+</button>
+                    </div>
+                </div>
+                <div class="goal-card">
+                    <h2>Награда</h2>
+                    <p class="hint">Если я достигну своих целей, я награжу себя:</p>
+                    <textarea id="rewardInput" placeholder="Например: поход в спа..."></textarea>
+                </div>
+                <div class="goal-card wide">
+                    <h2>Заметки</h2>
+                    <textarea id="notesInput" placeholder="Свободные записи..."></textarea>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <aside class="articles">
+        <div class="articles-title">Статьи</div>
+        <div class="articles-list" id="articlesList"></div>
+    </aside>
+
+    <!-- МОДАЛКА ПРИВЫЧКИ -->
+    <div id="habitModal" class="modal">
+        <div class="modal-box">
+            <span class="close" id="closeHabitModal">&times;</span>
+            <h2 id="habitModalTitle">Добавить привычку</h2>
+            <form id="habitForm">
+                <input type="text" id="habitName" placeholder="Название" required>
+                <input type="text" id="habitDesc" placeholder="Описание (необязательно)">
+                <select id="habitCategory">
+                    <option value="Здоровье">Здоровье</option>
+                    <option value="Спорт">Спорт</option>
+                    <option value="Учёба">Учёба</option>
+                    <option value="Творчество">Творчество</option>
+                    <option value="Другое">Другое</option>
+                </select>
+                <button type="submit" class="btn-primary">Сохранить</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА НАСТРОЕНИЯ -->
+    <div id="moodModal" class="modal">
+        <div class="modal-box">
+            <span class="close" id="closeMoodModal">&times;</span>
+            <h2 id="moodModalTitle">Состояние</h2>
+            <div class="mood-picker" id="moodPicker"></div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА СТАТЬИ -->
+    <div id="articleModal" class="modal">
+        <div class="modal-box article-full">
+            <span class="close" id="closeArticleModal">&times;</span>
+            <div id="articleBody"></div>
+        </div>
+    </div>
+
+</div>
+
+<!-- FIREBASE SDK -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut }
+        from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc }
+        from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCs34XzDdo-oqMT1lQ2MQpeRkIf3teCuo",
+        authDomain: "venera-planner.firebaseapp.com",
+        projectId: "venera-planner",
+        storageBucket: "venera-planner.firebasestorage.app",
+        messagingSenderId: "164164730187",
+        appId: "1:164164730187:web:815ef50f553e4fa4cbffce"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    window.firebaseAuth = auth;
+    window.firebaseDb = db;
+    window.firebaseOnAuthStateChanged = onAuthStateChanged;
+    window.firebaseSignIn = signInWithEmailAndPassword;
+    window.firebaseRegister = createUserWithEmailAndPassword;
+    window.firebaseSignOut = signOut;
+    window.firebaseDoc = doc;
+    window.firebaseSetDoc = setDoc;
+    window.firebaseGetDoc = getDoc;
+
+    window.dispatchEvent(new Event('firebase-ready'));
+    console.log('✓ Firebase загружен, ключ:', firebaseConfig.apiKey.substring(0, 20) + '...');
+</script>
+
+<script src="script.js"></script>
+</body>
+</html>
